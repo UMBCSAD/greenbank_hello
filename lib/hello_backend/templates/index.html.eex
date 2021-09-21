@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>UMBCSAD Greenbank</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' *"> -->
+  <style>
+    html {
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+
+    .logo-image {
+      max-width: 700px;
+      width: 75%;
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .subtitle {
+      padding: 8px;
+    }
+
+    .lower-section {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <img src="/images/logo_hardhat.png" class="logo-image" />
+
+  <section class="hero is-info is-bold">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title" style="font-weight: normal;">
+          You're on <b>Greenbank</b>, <%= full_name %>
+        </h1>
+        <h2 class="subtitle">
+          Welcome, user
+          <span class="tag is-medium">
+            <%= username %>
+          </span>
+          on internal IP address
+          <span class="tag is-medium">
+            <%= vpn_ip %>
+          </span>
+        </h2>
+        If you're on this page, you've successfully connected to the VPN. Nice work!
+      </div>
+    </div>
+  </section>
+
+  <section class="section lower-section">
+    <h1 class="title">Next Steps:</h1>
+  </section>
+</body>
+
+</html>
