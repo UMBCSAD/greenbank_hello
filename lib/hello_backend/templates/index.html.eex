@@ -13,6 +13,12 @@
       overflow-y: auto;
     }
 
+    .logos-section {
+      margin-left: 50px;
+      margin-right: 50px;
+      padding: 1rem;
+    }
+
     .logo-image {
       max-width: 700px;
       width: 75%;
@@ -21,6 +27,22 @@
       margin-bottom: 20px;
       margin-left: auto;
       margin-right: auto;
+    }
+
+    @media screen and (min-width:769px),print {
+      .left-image {
+        margin-right: 0;
+      }
+
+      .right-image {
+        margin-left: 0;
+        padding-left: 5px;
+      }
+    }
+
+    .right-logo-column {
+      display: flex;
+      align-items: center;
     }
 
     .subtitle {
@@ -34,9 +56,18 @@
 </head>
 
 <body>
-  <img src="/images/logo_hardhat.png" class="logo-image" />
+  <section class="section logos-section">
+    <div class="columns">
+      <div class="column">
+        <img src="/images/logo_hardhat.png" class="logo-image left-image" />
+      </div>
+      <div class="column right-logo-column">
+        <img src="/images/greenbank.png" class="logo-image right-image" />
+      </div>
+    </div>
+  </section>
 
-  <section class="hero is-info is-bold">
+  <section class="hero is-info">
     <div class="hero-body">
       <div class="container has-text-centered">
         <h1 class="title" style="font-weight: normal;">
@@ -59,6 +90,24 @@
 
   <section class="section lower-section">
     <h1 class="title">Next Steps:</h1>
+    <div class="tile is-ancestor">
+
+      <div class="tile is-vertical is-parent tile-left">
+        <div class="tile is-child box">
+          <p class="title">One</p>
+        </div>
+        <div class="tile is-child box">
+          <p class="title">Two</p>
+        </div>
+      </div>
+
+      <div class="tile is-vertical is-parent tile-right">
+        <div class="tile is-child box">
+          <p class="title">Three</p>
+        </div>
+      </div>
+
+    </div>
   </section>
 </body>
 
