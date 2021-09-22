@@ -66,6 +66,12 @@
       background: rgb(59, 187, 103);
       background: radial-gradient(circle, rgba(59, 187, 103, 1) 35%, rgba(66, 154, 96, 1) 100%);
     }
+
+    .group-desc {
+      white-space: normal !important;
+      height: initial !important;
+      min-height: 2em;
+    }
   </style>
 
   <script>
@@ -423,7 +429,7 @@
                       </span>
                     </td>
                     <td>
-                      <span class="tag is-medium" style="background-color: inherit;">
+                      <span class="tag is-medium group-desc" style="background-color: inherit;">
                         <%= case group do "pfsense_basic" -> "Login and viewing access to firewall"
                           "pfsense_vpn" -> "Access to VPN (mandatory)"
                           "ipausers" -> "Generic group for all users"
