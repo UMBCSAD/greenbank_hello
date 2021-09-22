@@ -61,6 +61,11 @@
     #dns-startbutton:disabled {
       cursor: wait;
     }
+
+    .hero.is-info {
+      background: rgb(59,187,103);
+      background: radial-gradient(circle, rgba(59,187,103,1) 35%, rgba(66,154,96,1) 100%);
+    }
   </style>
 
   <script>
@@ -232,7 +237,7 @@
                   <span>FreeIPA (No DNS)</span></a>
               </p>
               <% else %>
-                <p class="block">This is a security risk. Please change it as soon as possible.</p>
+                <p class="block">This is a security risk. Please change it.</p>
                 <p class="block level level-left" style="display:flex;">
                   <span>Go here:</span>
                   <a class="button is-danger" href="https://ipa.greenbank.lan/ipa/ui/" style="margin-left: 0.7rem;"
@@ -250,8 +255,9 @@
                 </p>
                 <p class="block">
                   Try the left link, but you may need to use the right if your DNS is nonfunctional.
+                  If a security warning appears, add an exception / click past it.
                   If a <i>browser popup</i> appears, click Cancel.
-                  Then, sign in with your existing username and password.
+                  At the grey screen, sign in with your existing username and password.
                 </p>
                 <p class="block">
                   It will immediately prompt you to make a new password.
@@ -267,20 +273,41 @@
         </div>
 
 
-        <!-- IDK -->
-        <div class="tile is-child message">
+        <!-- ACCOUNT DETAILS -->
+        <div class="tile is-child message <%= if emails == [], do: " is-warning" %>">
           <div class="message-header">
-            Hello World
+            Check your Account Details
             <span class="icon">
-              <i class="fas fa-key"></i>
+              <i class="fas fa-user-check"></i>
             </span>
           </div>
           <div class="message-body">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis
-            placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et
-            dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales,
-            arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna,
-            vehicula et sem eget, facilisis sodales sem.
+            <div class="block" style="margin-bottom: 0rem;">
+              Full name:
+              <span class="tag is-medium is-white" style="margin-left: 0.2rem;">
+                <%= full_name %>
+              </span>
+            </div>
+            <div class="block" style="margin-top: 0.4rem; margin-bottom: 0.4rem;">
+              Emails:
+              <%= if emails !=[] do %>
+                <%= for email <- emails do %>
+                  <span class="tag is-medium is-white" style="margin-left: 0.2rem;">
+                    <%= email %>
+                  </span>
+                  <% end %>
+                    <% else %>
+                      <span class="tag is-medium is-warning" style="margin-left: 0.2rem;">
+                        <span class="icon-text">
+                          <span class="icon"><i class="fas fa-envelope"></i></span>
+                          <span>No email present. Consider adding one.</span>
+                        </span>
+                      </span>
+                      <% end %>
+            </div>
+            <div class="block" style="margin-top: 0.8rem;">
+              If you wish to change either of these, log in to FreeIPA (see above).
+            </div>
           </div>
         </div>
 
