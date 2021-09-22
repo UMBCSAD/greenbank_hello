@@ -21,6 +21,9 @@ defmodule HelloBackend.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: HelloBackend.Supervisor]
     Logger.info("Starting application...")
+    Logger.info("############################")
+    Logger.info("    STARTING ON PORT #{Application.get_env(:hello_backend, :port)}")
+    Logger.info("############################")
 
     Supervisor.start_link(children, opts)
   end
