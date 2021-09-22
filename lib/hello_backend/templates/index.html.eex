@@ -57,7 +57,105 @@
     .bottom-tiles-container {
       text-align: left;
     }
+
+    #dns-startbutton:disabled {
+      cursor: wait;
+    }
   </style>
+
+  <script>
+    function dnsTestClicked() {
+      console.log("Running DNS Tests...");
+      document.querySelector("#dns-startbutton").setAttribute("disabled", "true");
+      const progbar = '<progress class="progress is-info" max="100"></progress>';
+      const success = `
+        <span class="icon-text has-text-success">
+          <span class="icon"><i class="fas fa-check"></i></span>
+          <span>Success</span>
+        </span>`;
+      const failure = `
+        <span class="icon-text has-text-danger">
+          <span class="icon"><i class="fas fa-times"></i></span>
+          <span>Failed</span>
+        </span>`;
+      document.querySelector("#dns-base").innerHTML = progbar;
+      document.querySelector("#dns-func").innerHTML = progbar;
+      document.querySelector("#dns-sear").innerHTML = progbar;
+      document.querySelector("#dns-summ").innerHTML = progbar;
+      const port = ":4001";
+
+      let p1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          fetch("/").then(response => {
+            console.log("base success");
+            document.querySelector("#dns-base").innerHTML = success;
+            resolve();
+          }).catch(error => {
+            console.log("base error");
+            document.querySelector("#dns-base").innerHTML = failure;
+            reject();
+          });
+        }, 500);
+      });
+
+      let p2 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          fetch("http://hello.greenbank.lan" + port).then(response => {
+            console.log("func success");
+            document.querySelector("#dns-func").innerHTML = success;
+            resolve();
+          }).catch(error => {
+            console.log("func error");
+            document.querySelector("#dns-func").innerHTML = failure;
+            reject();
+          });
+        }, 1000);
+      });
+
+      let p3 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          fetch("http://hello" + port).then(response => {
+            console.log("sear success");
+            document.querySelector("#dns-sear").innerHTML = success;
+            resolve();
+          }).catch(error => {
+            console.log("sear error");
+            document.querySelector("#dns-sear").innerHTML = failure;
+            reject();
+          });
+        }, 1500);
+      });
+
+      Promise.allSettled([p1, p2, p3]).then((results) => {
+        console.log(results);
+        const success_count = results.filter((a) => a.status == "fulfilled").length;
+        document.querySelectorAll("#dns-test-panel, #dns-startbutton").forEach(n => n.classList.remove("is-info", "is-danger", "is-warning", "is-success"));
+        let result_html = `
+          <span class="icon-text has-text-warning-dark">
+            <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
+            <span>${success_count}/3 succeeded</span>
+          </span>`;
+        if (success_count == 3) {
+          // total success
+          result_html = success;
+          document.querySelectorAll("#dns-test-panel, #dns-startbutton").forEach(n => n.classList.add("is-success"));
+        } else if (success_count == 0) {
+          // total failure
+          result_html = `
+            <span class="icon-text has-text-danger">
+              <span class="icon"><i class="fas fa-plug"></i></span>
+              <span>Disconnected?</span>
+            </span>`;
+          document.querySelectorAll("#dns-test-panel, #dns-startbutton").forEach(n => n.classList.add("is-danger"));
+        } else {
+          // intermediate
+          document.querySelectorAll("#dns-test-panel, #dns-startbutton").forEach(n => n.classList.add("is-warning"));
+        }
+        document.querySelector("#dns-summ").innerHTML = result_html;
+        document.querySelector("#dns-startbutton").removeAttribute("disabled");
+      });
+    }
+  </script>
 </head>
 
 <body>
@@ -133,7 +231,7 @@
                   </span>
                   <span>FreeIPA (No DNS)</span></a>
               </p>
-              <%= else %>
+              <% else %>
                 <p class="block">This is a security risk. Please change it as soon as possible.</p>
                 <p class="block level level-left" style="display:flex;">
                   <span>Go here:</span>
@@ -192,7 +290,7 @@
 
 
         <!-- DNS TEST -->
-        <div class="tile is-child message is-info">
+        <div id="dns-test-panel" class="tile is-child message is-info">
           <div class="message-header">
             Test your DNS
             <span class="icon">
@@ -203,41 +301,33 @@
             <table class="table is-hoverable is-fullwidth block" style="background-color: inherit;">
               <tbody>
                 <tr>
-                  <td><abbr title="Try fetching the homepage">Baseline Test</abbr></td>
-                  <td>
-                    <!-- <i id="dns-base-wait">Waiting to run...</i>
-                    <progress id="dns-base-prog" class="progress is-info" max="100"></progress> -->
-                    <span class="icon-text has-text-success">
-                      <span class="icon">
-                        <i class="fas fa-check"></i>
-                      </span>
-                      <span>Success</span>
-                    </span>
-                  </td>
+                  <td><abbr title="Try fetching the homepage (sanity check)">Baseline Test</abbr></td>
+                  <td id="dns-base"><i>Waiting to run...</i></td>
                 </tr>
                 <tr>
                   <td><abbr title="Try fetching http://hello.greenbank.lan">DNS Functionality Test</abbr></td>
-                  <td><i>Waiting to run...</i></td>
+                  <td id="dns-func"><i>Waiting to run...</i></td>
                 </tr>
                 <tr>
                   <td><abbr title="Try fetching just http://hello (check if greenbank.lan is set as search domain)">
                       DNS Search Domain Test</abbr></td>
-                  <td><i>Waiting to run...</i></td>
+                  <td id="dns-sear"><i>Waiting to run...</i></td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <td>Summary</td>
-                  <td><i>Waiting to run...</i></td>
+                  <td id="dns-summ"><i>Waiting to run...</i></td>
                 </tr>
               </tfoot>
             </table>
             <div class="block">
-              <a class="button is-info" style="float:right; margin-left: 1.5rem; margin-bottom: 1rem;">
+              <button id="dns-startbutton" class="button is-info"
+                style="float:right; margin-left: 1.5rem; margin-bottom: 1rem;" onclick="dnsTestClicked()">
                 <span class="icon">
                   <i class="fas fa-satellite-dish"></i>
                 </span>
-                <span>Run DNS Tests</span></a>
+                <span>Run DNS Tests</span></button>
               DNS, the Domain Name System, is the service which associates text-based names like "google.com" with
               IP addresses. There is an internal DNS system running within the Greenbank network, hosted on pfSense.
               However, some VPN configs will not automatically set up the DNS. This Javascript-based test will
