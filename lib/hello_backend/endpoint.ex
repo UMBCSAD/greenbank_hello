@@ -19,7 +19,6 @@ defmodule HelloBackend.Endpoint do
   plug(:dispatch)
 
   get "/" do
-
     ### use catclients on pfsense to get the VPN username
 
     catclients_pw = Application.get_env(:hello_backend, :pfsense_catclients_pw)
@@ -93,6 +92,9 @@ defmodule HelloBackend.Endpoint do
     render(conn, "index.html",
       full_name: full_name,
       username: username,
+      emails: emails,
+      pass_good?: is_pass_good,
+      member_of: member_of,
       vpn_ip: Enum.at(row, 0),
       remote_ip: Enum.at(row, 2)
     )

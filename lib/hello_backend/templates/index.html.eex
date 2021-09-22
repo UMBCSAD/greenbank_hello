@@ -3,16 +3,14 @@
 
 <head>
   <title>UMBCSAD Greenbank</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+    integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' *"> -->
   <style>
-    html {
-      overflow-x: auto;
-      overflow-y: auto;
-    }
-
     .logos-section {
       margin-left: 50px;
       margin-right: 50px;
@@ -29,7 +27,8 @@
       margin-right: auto;
     }
 
-    @media screen and (min-width:769px),print {
+    @media screen and (min-width:769px),
+    print {
       .left-image {
         margin-right: 0;
       }
@@ -51,6 +50,12 @@
 
     .lower-section {
       text-align: center;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    .bottom-tiles-container {
+      text-align: left;
     }
   </style>
 </head>
@@ -89,24 +94,160 @@
   </section>
 
   <section class="section lower-section">
-    <h1 class="title">Next Steps:</h1>
-    <div class="tile is-ancestor">
-
+    <h1 class="title" style="margin-bottom: 2.5rem;">Account Status and Next Steps</h1>
+    <div class="tile is-ancestor bottom-tiles-container">
       <div class="tile is-vertical is-parent tile-left">
-        <div class="tile is-child box">
-          <p class="title">One</p>
-        </div>
-        <div class="tile is-child box">
-          <p class="title">Two</p>
-        </div>
-      </div>
 
+
+        <!-- PASSWORD -->
+        <div class="tile is-child message <%= if pass_good?, do: " is-success", else: "is-danger" %>">
+          <div class="message-header">
+            <span <%=if pass_good?, do: ~s(style="font-style: italic;" ) %>>
+              <%= if pass_good?, do: "Password Already Changed" , else: "Change your Password" %>
+            </span>
+            <span class="icon">
+              <i class="fas fa-key"></i>
+            </span>
+          </div>
+          <div class="message-body">
+            <p>
+              <span class="icon">
+                <i class="fas fa-<%= if pass_good?, do: ~s(check), else: ~s(warning) %>"></i>
+              </span>
+              <strong>
+                <%= if pass_good?, do: "No action required" , else: "You are still using the default password!" %>
+              </strong>
+            </p>
+            <%= if pass_good? do %>
+              <p>You have already changed your password. Thank you.</p>
+              <p>If you want to change your password again, visit FreeIPA.</p>
+              <p class="block level level-left" style="display:flex; margin-top: 0.7rem;">
+                <a class="button is-success" href="https://ipa.greenbank.lan/ipa/ui/" target="_blank">
+                  <span class="icon">
+                    <i class="fas fa-id-card"></i>
+                  </span>
+                  <span>FreeIPA</span></a>
+                <a class="button" href="https://192.168.1.107/ipa/ui/" style="margin-left: 0.7rem;" target="_blank">
+                  <span class="icon">
+                    <i class="fas fa-id-card"></i>
+                  </span>
+                  <span>FreeIPA (No DNS)</span></a>
+              </p>
+              <%= else %>
+                <p class="block">This is a security risk. Please change it as soon as possible.</p>
+                <p class="block level level-left" style="display:flex;">
+                  <span>Go here:</span>
+                  <a class="button is-danger" href="https://ipa.greenbank.lan/ipa/ui/" style="margin-left: 0.7rem;"
+                    target="_blank">
+                    <span class="icon">
+                      <i class="fas fa-id-card"></i>
+                    </span>
+                    <span>FreeIPA</span></a>
+                  <a class="button is-warning" href="https://192.168.1.107/ipa/ui/" style="margin-left: 0.7rem;"
+                    target="_blank">
+                    <span class="icon">
+                      <i class="fas fa-id-card"></i>
+                    </span>
+                    <span>FreeIPA (No DNS)</span></a>
+                </p>
+                <p class="block">
+                  Try the left link, but you may need to use the right if your DNS is nonfunctional.
+                  If a <i>browser popup</i> appears, click Cancel.
+                  Then, sign in with your existing username and password.
+                </p>
+                <p class="block">
+                  It will immediately prompt you to make a new password.
+                  Make a new password, and <strong>remember it</strong> or put it in your password manager.
+                  As this is a shared environment, please do not reuse a password from elsewhere!
+                </p>
+                <p class="block">
+                  Once you get through to the full account page, you are finished. Thank you for maintaining SAD
+                  security. Refresh this page to clear this warning.
+                </p>
+                <% end %>
+          </div>
+        </div>
+
+
+        <!-- IDK -->
+        <div class="tile is-child message">
+          <div class="message-header">
+            Hello World
+            <span class="icon">
+              <i class="fas fa-key"></i>
+            </span>
+          </div>
+          <div class="message-body">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis
+            placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et
+            dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales,
+            arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna,
+            vehicula et sem eget, facilisis sodales sem.
+          </div>
+        </div>
+
+
+      </div>
       <div class="tile is-vertical is-parent tile-right">
-        <div class="tile is-child box">
-          <p class="title">Three</p>
-        </div>
-      </div>
 
+
+        <!-- DNS TEST -->
+        <div class="tile is-child message is-info">
+          <div class="message-header">
+            Test your DNS
+            <span class="icon">
+              <i class="fas fa-network-wired"></i>
+            </span>
+          </div>
+          <div class="message-body">
+            <table class="table is-hoverable is-fullwidth block" style="background-color: inherit;">
+              <tbody>
+                <tr>
+                  <td><abbr title="Try fetching the homepage">Baseline Test</abbr></td>
+                  <td>
+                    <!-- <i id="dns-base-wait">Waiting to run...</i>
+                    <progress id="dns-base-prog" class="progress is-info" max="100"></progress> -->
+                    <span class="icon-text has-text-success">
+                      <span class="icon">
+                        <i class="fas fa-check"></i>
+                      </span>
+                      <span>Success</span>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><abbr title="Try fetching http://hello.greenbank.lan">DNS Functionality Test</abbr></td>
+                  <td><i>Waiting to run...</i></td>
+                </tr>
+                <tr>
+                  <td><abbr title="Try fetching just http://hello (check if greenbank.lan is set as search domain)">
+                      DNS Search Domain Test</abbr></td>
+                  <td><i>Waiting to run...</i></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>Summary</td>
+                  <td><i>Waiting to run...</i></td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="block">
+              <a class="button is-info" style="float:right; margin-left: 1.5rem; margin-bottom: 1rem;">
+                <span class="icon">
+                  <i class="fas fa-satellite-dish"></i>
+                </span>
+                <span>Run DNS Tests</span></a>
+              DNS, the Domain Name System, is the service which associates text-based names like "google.com" with
+              IP addresses. There is an internal DNS system running within the Greenbank network, hosted on pfSense.
+              However, some VPN configs will not automatically set up the DNS. This Javascript-based test will
+              determine if your machine is connected to the Greenbank DNS. Click the button to begin.
+            </div>
+          </div>
+        </div>
+
+
+      </div>
     </div>
   </section>
 </body>
