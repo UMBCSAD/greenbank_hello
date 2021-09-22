@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
     integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' *"> -->
   <style>
     .logos-section {
       margin-left: 50px;
@@ -71,6 +70,32 @@
       white-space: normal !important;
       height: initial !important;
       min-height: 2em;
+    }
+
+    .quicklink {
+      padding: 1em;
+      color: rgb(74, 74, 74);
+      pointer-events: none;
+    }
+
+    .quicklink:hover {
+      color: rgb(74, 74, 74);
+      box-shadow: 4px 4px 15px 7px #969696;
+    }
+
+    .quicklink img {
+      max-width: 120px;
+      margin: 1.25rem;
+      pointer-events: auto;
+    }
+
+    .quicklink>pre:last-of-type {
+      padding-top: 0;
+      padding-bottom: 0.5rem;
+    }
+
+    .quicklink>pre:first-of-type {
+      padding-bottom: 0.5rem;
     }
   </style>
 
@@ -467,6 +492,62 @@
       </div>
     </div>
   </section>
+
+  <section class="section lower-section" style="padding-top: 1.5rem;">
+    <h1 class="title" style="margin-bottom: 2.5rem;">Quick Links</h1>
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child message quicklink">
+          <span class="title is-4">Proxmox</span>
+          <br>
+          <a href="/"> <img src="/images/proxmox.png" /></a>
+          <br>
+          Use Proxmox to create and view virtual machines and LXC containers. Everything in the Greenbank system runs as
+          a VM or CT in Proxmox.
+          <br>
+          <pre>https://proxmox.greenbank.lan:8006/</pre>
+          <pre>https://192.168.1.50:8006/</pre>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <div class="tile is-child message quicklink" href="/">
+          <span class="title is-4">FreeIPA</span>
+          <br>
+          <a href="/"> <img src="/images/freeipa.png" /></a>
+          <br>
+          Use FreeIPA to change your password and manage your account details. Admins, use FreeIPA to add new users,
+          grant
+          certificates, and grant user groups.
+          <br>
+          <pre>https://ipa.greenbank.lan/</pre>
+          <pre>https://192.168.1.107/</pre>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <div class="tile is-child message quicklink" href="/">
+          <span class="title is-4">pfSense</span>
+          <br>
+          <a href="/"> <img src="/images/pfsense.png" /></a>
+          <br>
+          Use pfSense to add and edit network services like DHCP, DNS, and NTP, monitor the network, and manage
+          firewall/NAT rules.
+          <br>
+          <pre>https://pfsense.greenbank.lan/</pre>
+          <pre>https://192.168.1.1/</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p> <strong>University of Maryland, Baltimore County</strong> <br>
+        System Administration and Software Development Club <br>
+        1000 Hilltop Circle
+        Baltimore, MD 21250</p>
+        <p>Greenbank Virtualized Lab Environment</p>
+    </div>
+  </footer>
 </body>
 
 </html>
