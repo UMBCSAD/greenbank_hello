@@ -1,21 +1,11 @@
-# HelloBackend
+# SAD Greenbank: Hello Page
 
-**TODO: Add description**
+A small landing/welcome page for Greenbank users.
 
-## Installation
+Displays username by fetching it from the custom catclients service on pfSense, displays user information by running the username through LDAP. Shows some useful quick links.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `hello_backend` to your list of dependencies in `mix.exs`:
+Run with `mix run --no-halt`.
 
-```elixir
-def deps do
-  [
-    {:hello_backend, "~> 0.1.0"}
-  ]
-end
-```
+![image](https://user-images.githubusercontent.com/2071451/134284214-ccce2120-53b8-4f43-aacf-ddbba28c9c61.png)
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/hello_backend](https://hexdocs.pm/hello_backend).
-
+![image](https://user-images.githubusercontent.com/2071451/134284247-6df725ed-bbec-4ecc-a9d2-207bc1d31ee6.png)
