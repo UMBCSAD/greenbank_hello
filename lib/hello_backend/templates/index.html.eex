@@ -63,8 +63,8 @@
     }
 
     .hero.is-info {
-      background: rgb(59,187,103);
-      background: radial-gradient(circle, rgba(59,187,103,1) 35%, rgba(66,154,96,1) 100%);
+      background: rgb(59, 187, 103);
+      background: radial-gradient(circle, rgba(59, 187, 103, 1) 35%, rgba(66, 154, 96, 1) 100%);
     }
   </style>
 
@@ -224,7 +224,7 @@
             <%= if pass_good? do %>
               <p>You have already changed your password. Thank you.</p>
               <p>If you want to change your password again, visit FreeIPA.</p>
-              <p class="block level level-left" style="display:flex; margin-top: 0.7rem;">
+              <p class="block level level-left" style="display:flex; margin: 0.7rem 0;">
                 <a class="button is-success" href="https://ipa.greenbank.lan/ipa/ui/" target="_blank">
                   <span class="icon">
                     <i class="fas fa-id-card"></i>
@@ -236,6 +236,9 @@
                   </span>
                   <span>FreeIPA (No DNS)</span></a>
               </p>
+              <div class="block" style="margin-top: 0rem;">
+                Thanks for maintaining SAD security!
+              </div>
               <% else %>
                 <p class="block">This is a security risk. Please change it.</p>
                 <p class="block level level-left" style="display:flex;">
@@ -359,6 +362,73 @@
               IP addresses. There is an internal DNS system running within the Greenbank network, hosted on pfSense.
               However, some VPN configs will not automatically set up the DNS. This Javascript-based test will
               determine if your machine is connected to the Greenbank DNS. Click the button to begin.
+            </div>
+          </div>
+        </div>
+
+
+        <!-- GROUPS -->
+        <div id="dns-test-panel"
+          class="tile is-child message <%= if Enum.member?(member_of, ~s(proxmox_basic)), do: ~s(is-info), else: ~s(is-danger) %>">
+          <div class="message-header">
+            Review your System Groups
+            <span class="icon">
+              <i class="fas fa-users"></i>
+            </span>
+          </div>
+          <div class="message-body">
+            <table class="table is-hoverable is-fullwidth block" style="background-color: inherit;">
+              <thead>
+                <tr>
+                  <td></td>
+                  <td><span style="padding: 0 0.75em;">Group ID</span></td>
+                  <td><span style="padding: 0 0.75em;">Description</span></td>
+                </tr>
+              </thead>
+              <tbody>
+                <%= for group <- (member_of) do %>
+                  <tr>
+                    <td>
+                      <span class="tag is-medium icon" style="background-color: inherit;">
+                        <i class="fas fa-user-friends"></i>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="tag is-medium is-white">
+                        <%= group %>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="tag is-medium" style="background-color: inherit;">
+                        <%= case group do "pfsense_basic" -> "Login and viewing access to firewall"
+                          "pfsense_vpn" -> "Access to VPN (mandatory)"
+                          "ipausers" -> "Generic group for all users"
+                          "proxmox_basic" -> "Access to Proxmox login and sandbox VM pool"
+                          "proxmox_general" -> "Access to general VM pool"
+                          "proxmox_restricted" -> "Advanced access to club infrastructure VMs"
+                          _ -> "-"
+                          end %>
+                      </span>
+                    </td>
+                  </tr>
+                  <% end %>
+              </tbody>
+            </table>
+            <div class="block">
+              <%= if not Enum.member?(member_of, "proxmox_basic" ) do %>
+                <p>
+                  <span class="icon">
+                    <i class="fas fa-warning"></i>
+                  </span>
+                  <strong>
+                    Missing access to <span class="tag is-medium is-danger">proxmox_basic</span>
+                  </strong>
+                  - You are unable to login to Proxmox.
+                </p>
+                <% end %>
+            </div>
+            <div class="block">
+              <strong>Missing a group/permission?</strong> Contact the board to get access.
             </div>
           </div>
         </div>
