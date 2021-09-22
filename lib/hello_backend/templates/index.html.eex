@@ -500,7 +500,7 @@
         <div class="tile is-child message quicklink">
           <span class="title is-4">Proxmox</span>
           <br>
-          <a href="/"> <img src="/images/proxmox.png" /></a>
+          <a href="https://proxmox.greenbank.lan:8006/"> <img src="/images/proxmox.png" /></a>
           <br>
           Use Proxmox to create and view virtual machines and LXC containers. Everything in the Greenbank system runs as
           a VM or CT in Proxmox.
@@ -513,7 +513,7 @@
         <div class="tile is-child message quicklink" href="/">
           <span class="title is-4">FreeIPA</span>
           <br>
-          <a href="/"> <img src="/images/freeipa.png" /></a>
+          <a href="https://ipa.greenbank.lan/"> <img src="/images/freeipa.png" /></a>
           <br>
           Use FreeIPA to change your password and manage your account details. Admins, use FreeIPA to add new users,
           grant
@@ -527,7 +527,7 @@
         <div class="tile is-child message quicklink" href="/">
           <span class="title is-4">pfSense</span>
           <br>
-          <a href="/"> <img src="/images/pfsense.png" /></a>
+          <a href="https://pfsense.greenbank.lan/"> <img src="/images/pfsense.png" /></a>
           <br>
           Use pfSense to add and edit network services like DHCP, DNS, and NTP, monitor the network, and manage
           firewall/NAT rules.
