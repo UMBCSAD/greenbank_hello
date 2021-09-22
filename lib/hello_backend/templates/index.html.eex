@@ -315,6 +315,30 @@
         </div>
 
 
+        <!-- DOCUMENTATION -->
+        <div class="tile is-child message is-link">
+          <div class="message-header">
+            Read the Freaking Manual
+            <span class="icon">
+              <i class="fas fa-book"></i>
+            </span>
+          </div>
+          <div class="message-body">
+            <div class="block">
+              Before making use of the Greenbank system, we request that you read the Rules section in the following
+              link,
+              and at least skim the Etiquette section at the bottom a bit.
+            </div>
+            <div class="block">
+              <a href="https://sad.cs.umbc.edu/greenbank" class="button is-link" target="_blank">
+                <span class="icon"> <i class="fas fa-book-reader"></i> </span>
+                <span>Open Manual in New Tab</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+
       </div>
       <div class="tile is-vertical is-parent tile-right">
 
@@ -368,7 +392,7 @@
 
 
         <!-- GROUPS -->
-        <div id="dns-test-panel"
+        <div
           class="tile is-child message <%= if Enum.member?(member_of, ~s(proxmox_basic)), do: ~s(is-info), else: ~s(is-danger) %>">
           <div class="message-header">
             Review your System Groups
