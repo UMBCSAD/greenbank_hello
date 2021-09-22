@@ -12,7 +12,7 @@ defmodule HelloBackend.Application do
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: HelloBackend.Endpoint,
-        options: [port: 4001]
+        options: [port: Application.get_env(:hello_backend, :port)]
       ),
       {HelloBackend.Ldap, name: HelloBackend.Ldap}
     ]

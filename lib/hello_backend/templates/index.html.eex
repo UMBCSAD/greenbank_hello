@@ -118,7 +118,7 @@
       document.querySelector("#dns-func").innerHTML = progbar;
       document.querySelector("#dns-sear").innerHTML = progbar;
       document.querySelector("#dns-summ").innerHTML = progbar;
-      const port = ":4001";
+      const port = ":<%= Application.get_env(:hello_backend, :port) %>";
 
       let p1 = new Promise((resolve, reject) => {
         setTimeout(() => {

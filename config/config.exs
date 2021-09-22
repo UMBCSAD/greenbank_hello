@@ -1,5 +1,8 @@
 import Config
 
+config :hello_backend,
+  port: 80
+
 config :logger, :console,
   format: "$time $metadata[$level] $levelpad$message\n",
   level: :info
