@@ -101,6 +101,7 @@ defmodule HelloBackend.Endpoint do
   end
 
   get "/ping" do
+    conn = Plug.Conn.put_resp_header(conn, "Access-Control-Allow-Origin", "*")
     send_resp(conn, 200, "pong!")
   end
 

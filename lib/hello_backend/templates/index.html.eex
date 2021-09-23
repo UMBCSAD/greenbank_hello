@@ -118,11 +118,11 @@
       document.querySelector("#dns-func").innerHTML = progbar;
       document.querySelector("#dns-sear").innerHTML = progbar;
       document.querySelector("#dns-summ").innerHTML = progbar;
-      const port = ":<%= Application.get_env(:hello_backend, :port) %>";
+      // const port = ":<%= Application.get_env(:hello_backend, :port) %>";
 
       let p1 = new Promise((resolve, reject) => {
         setTimeout(() => {
-          fetch("/").then(response => {
+          fetch("/ping").then(response => {
             console.log("base success");
             document.querySelector("#dns-base").innerHTML = success;
             resolve();
@@ -136,7 +136,7 @@
 
       let p2 = new Promise((resolve, reject) => {
         setTimeout(() => {
-          fetch("http://hello.greenbank.lan" + port).then(response => {
+          fetch("http://hello.greenbank.lan/ping").then(response => {
             console.log("func success");
             document.querySelector("#dns-func").innerHTML = success;
             resolve();
@@ -150,7 +150,7 @@
 
       let p3 = new Promise((resolve, reject) => {
         setTimeout(() => {
-          fetch("http://hello" + port).then(response => {
+          fetch("http://hello/ping").then(response => {
             console.log("sear success");
             document.querySelector("#dns-sear").innerHTML = success;
             resolve();
