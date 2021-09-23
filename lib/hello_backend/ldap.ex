@@ -29,7 +29,7 @@ defmodule HelloBackend.Ldap do
   end
 
   @impl true
-  def handle_cast(:kys, state) do
+  def handle_cast(:keys, state) do
     {:noreply, state}
   end
 
