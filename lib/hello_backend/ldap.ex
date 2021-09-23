@@ -25,17 +25,14 @@ defmodule HelloBackend.Ldap do
 
   @impl true
   def init(_) do
-    {:ok, %{}}
-  end
-
-  @impl true
-  def handle_cast(:keys, state) do
-    {:noreply, state}
+    {:ok, nil}
   end
 
   @impl true
   def handle_call({:get_user, username}, _from, state) do
     {:ok, [user_data | _]} = Paddle.get(filter: [uid: username])
+    # ^^ will error out if LDAP is disconnected,
+    # which will trigger the genserver to restart. let it crash!
     {:reply, user_data, state}
   end
 end
