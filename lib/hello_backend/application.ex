@@ -8,11 +8,13 @@ defmodule HelloBackend.Application do
 
   @impl true
   def start(_type, _args) do
+    p = Application.get_env(:hello_backend, :port)
+
     children = [
       Plug.Cowboy.child_spec(
         scheme: :http,
         plug: HelloBackend.Endpoint,
-        options: [port: Application.get_env(:hello_backend, :port)]
+        options: [port: p]
       ),
       {HelloBackend.Ldap, name: HelloBackend.Ldap}
     ]
@@ -22,7 +24,7 @@ defmodule HelloBackend.Application do
     opts = [strategy: :one_for_one, name: HelloBackend.Supervisor]
     Logger.info("Starting application...")
     Logger.info("############################")
-    Logger.info("    STARTING ON PORT #{Application.get_env(:hello_backend, :port)}")
+    Logger.info("    STARTING ON PORT #{p} ")
     Logger.info("############################")
 
     Supervisor.start_link(children, opts)

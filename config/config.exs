@@ -15,3 +15,8 @@ config :paddle, Paddle,
   account_subdn: "cn=users"
 
 import_config("secret.exs")
+# ## expected in config/secret.exs ##
+# config :hello_backend,
+#   pfsense_catclients_pw: "PWHERE",
+#   ldap_user: "USERNAMEHERE",
+#   ldap_pw: "PASSWORDHERE"
