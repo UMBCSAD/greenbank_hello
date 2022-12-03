@@ -22,15 +22,13 @@ defmodule HelloBackend.Endpoint do
     ### use catclients on pfsense to get the VPN username
 
     catclients_pw = Application.get_env(:hello_backend, :pfsense_catclients_pw)
+    vpn_host = Application.get_env(:hello_backend, :vpn_host)
 
     {output, _} =
       System.shell(
         "echo #{catclients_pw}" <>
-          " | nc -w 2 pfsense 1984" <>
-          " | grep -A 9999 ROUTING" <>
-          " | grep -B 9999 GLOBAL" <>
-          " | tail -n +3" <>
-          " | head -n -1"
+          " | nc -w 2 #{vpn_host} 1984" <>
+          " | grep ^CLIENT_LIST"
       )
 
     user_ip = to_string(:inet_parse.ntoa(conn.remote_ip))
@@ -39,8 +37,7 @@ defmodule HelloBackend.Endpoint do
     row =
       output
       |> CommaParser.parse_string(skip_headers: false)
-      |> Enum.filter(fn row -> Enum.at(row, 0) == user_ip end)
-      |> Enum.at(0)
+      |> Enum.find(fn row -> Enum.at(row, 3) |> IO.inspect == user_ip end)
 
     Logger.info(inspect(row))
     username = Enum.at(row, 1)

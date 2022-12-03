@@ -1,6 +1,7 @@
 import Config
 
 config :hello_backend,
+  vpn_host: "10.42.0.10",
   port: 80
 
 config :logger, :console,
@@ -8,8 +9,8 @@ config :logger, :console,
   level: :info
 
 config :paddle, Paddle,
-  host: "ipa.greenbank.lan",
-  base: "cn=accounts,dc=greenbank,dc=lan",
+  host: "auth.umbcsad.club",
+  base: "cn=accounts,dc=umbcsad,dc=club",
   ssl: true,
   port: 636,
   account_subdn: "cn=users"
