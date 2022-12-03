@@ -13,7 +13,7 @@ Run with `mix run --no-halt`. See setup instructions below.
 ## Setup
 
 Install Elixir by the standard procedure for your distro. On recent Ubuntu (22), `apt install elixir` sufficies.
-Also do `apt install erlang-ldap`.
+Also do `apt install erlang-eldap`.
 
 Create a secret file in `config/secret.exs`, as follows:
 
