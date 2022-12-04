@@ -128,6 +128,7 @@
       document.querySelector("#test-ip").innerHTML = progbar;
       document.querySelector("#test-ip-yc").innerHTML = progbar;
       document.querySelector("#test-ip-bc").innerHTML = progbar;
+      document.querySelector("#test-expect-fail").innerHTML = progbar;
       document.querySelector("#test-dns").innerHTML = progbar;
       // const port = ":<%= Application.get_env(:hello_backend, :port) %>";
 
@@ -138,7 +139,7 @@
               target,
               {
                 mode: 'no-cors',
-                signal: AbortSignal.timeout(2000)
+                signal: AbortSignal.timeout(700)
               }
             ).then(response => {
               console.log(`${target}, ${elementId} success`);
@@ -172,7 +173,7 @@
           // total success
           result_html = success;
           document.querySelectorAll("#dns-test-panel, #dns-startbutton").forEach(n => n.classList.add("is-success"));
-        } else if (success_count == 0) {
+        } else if (success_count < 2) {
           // total failure
           result_html = `
             <span class="icon-text has-text-danger">
