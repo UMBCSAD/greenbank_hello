@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
     integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -17,30 +18,12 @@
     }
 
     .logo-image {
-      max-width: 700px;
-      width: 75%;
+      max-height: 170px;
       display: block;
       margin-top: 20px;
       margin-bottom: 20px;
       margin-left: auto;
       margin-right: auto;
-    }
-
-    @media screen and (min-width:769px),
-    print {
-      .left-image {
-        margin-right: 0;
-      }
-
-      .right-image {
-        margin-left: 0;
-        padding-left: 5px;
-      }
-    }
-
-    .right-logo-column {
-      display: flex;
-      align-items: center;
     }
 
     .subtitle {
@@ -63,7 +46,21 @@
 
     .hero.is-info {
       background: rgb(59, 187, 103);
-      background: radial-gradient(circle, rgba(59, 187, 103, 1) 35%, rgba(66, 154, 96, 1) 100%);
+      background-image: linear-gradient(
+        270deg,
+        hsl(240deg 62% 49%) 5%,
+        hsl(241deg 52% 52%) 22%,
+        hsl(242deg 44% 53%) 30%,
+        hsl(243deg 35% 54%) 37%,
+        hsl(244deg 27% 54%) 42%,
+        hsl(247deg 18% 54%) 47%,
+        hsl(255deg 10% 54%) 53%,
+        hsl(331deg 3% 54%) 58%,
+        hsl(43deg 10% 54%) 63%,
+        hsl(51deg 19% 53%) 70%,
+        hsl(53deg 28% 52%) 78%,
+        hsl(55deg 37% 50%) 95%
+        );
     }
 
     .group-desc {
@@ -89,13 +86,27 @@
       pointer-events: auto;
     }
 
-    .quicklink>pre:last-of-type {
-      padding-top: 0;
-      padding-bottom: 0.5rem;
+    .quicklink a {
+      pointer-events: auto;
+      font-family: monospace;
+      font-size: .875em;
+      text-decoration: none !important;
     }
 
-    .quicklink>pre:first-of-type {
-      padding-bottom: 0.5rem;
+    .quicklink a:hover {
+      color: red !important;
+    }
+
+    .quicklink a:nth-of-type(2) {
+      display: block;
+      margin-top: 1rem;
+    }
+
+    .yellowcake {
+      background-color: hsl(60, 60%, 93%);
+    }
+    .bluechip {
+      background-color: hsl(210, 60%, 96%);
     }
   </style>
 
@@ -114,64 +125,50 @@
           <span class="icon"><i class="fas fa-times"></i></span>
           <span>Failed</span>
         </span>`;
-      document.querySelector("#dns-base").innerHTML = progbar;
-      document.querySelector("#dns-func").innerHTML = progbar;
-      document.querySelector("#dns-sear").innerHTML = progbar;
-      document.querySelector("#dns-summ").innerHTML = progbar;
+      document.querySelector("#test-ip").innerHTML = progbar;
+      document.querySelector("#test-ip-yc").innerHTML = progbar;
+      document.querySelector("#test-ip-bc").innerHTML = progbar;
+      document.querySelector("#test-dns").innerHTML = progbar;
       // const port = ":<%= Application.get_env(:hello_backend, :port) %>";
 
-      let p1 = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          fetch("/ping").then(response => {
-            console.log("base success");
-            document.querySelector("#dns-base").innerHTML = success;
-            resolve();
-          }).catch(error => {
-            console.log("base error");
-            document.querySelector("#dns-base").innerHTML = failure;
-            reject();
-          });
-        }, 500);
-      });
+      function genTest(target, elementId, timeoffset, expectFailure = false) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            fetch(
+              target,
+              {
+                mode: 'no-cors',
+                signal: AbortSignal.timeout(2000)
+              }
+            ).then(response => {
+              console.log(`${target}, ${elementId} success`);
+              document.querySelector(elementId).innerHTML = expectFailure ? failure : success;
+              expectFailure ? reject() : resolve();
+            }).catch(error => {
+              console.log(`${target}, ${elementId} failure`);
+              document.querySelector(elementId).innerHTML = expectFailure ? success : failure;
+              expectFailure ? resolve() : reject();
+            });
+          }, timeoffset);
+        });
+      }
 
-      let p2 = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          fetch("http://hello.greenbank.lan/ping").then(response => {
-            console.log("func success");
-            document.querySelector("#dns-func").innerHTML = success;
-            resolve();
-          }).catch(error => {
-            console.log("func error");
-            document.querySelector("#dns-func").innerHTML = failure;
-            reject();
-          });
-        }, 1000);
-      });
+      let p1 = genTest("http://10.8.0.1", "#test-ip", 200);
+      let p2 = genTest("http://10.42.0.1", "#test-ip-yc", 400);
+      let p3 = genTest("http://10.42.5.1", "#test-ip-bc", 600);
+      let p4 = genTest("http://10.42.6.1", "#test-expect-fail", 100, true);
+      let p5 = genTest("https://proxmox.umbcsad.club:8006", "#test-dns", 1000);
 
-      let p3 = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          fetch("http://hello/ping").then(response => {
-            console.log("sear success");
-            document.querySelector("#dns-sear").innerHTML = success;
-            resolve();
-          }).catch(error => {
-            console.log("sear error");
-            document.querySelector("#dns-sear").innerHTML = failure;
-            reject();
-          });
-        }, 1500);
-      });
-
-      Promise.allSettled([p1, p2, p3]).then((results) => {
+      Promise.allSettled([p1, p2, p3, p4, p5]).then((results) => {
         console.log(results);
         const success_count = results.filter((a) => a.status == "fulfilled").length;
         document.querySelectorAll("#dns-test-panel, #dns-startbutton").forEach(n => n.classList.remove("is-info", "is-danger", "is-warning", "is-success"));
         let result_html = `
           <span class="icon-text has-text-warning-dark">
             <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
-            <span>${success_count}/3 succeeded</span>
+            <span>${success_count}/5 succeeded</span>
           </span>`;
-        if (success_count == 3) {
+        if (success_count == 5) {
           // total success
           result_html = success;
           document.querySelectorAll("#dns-test-panel, #dns-startbutton").forEach(n => n.classList.add("is-success"));
@@ -196,21 +193,14 @@
 
 <body>
   <section class="section logos-section">
-    <div class="columns">
-      <div class="column">
-        <img src="/images/logo_hardhat.png" class="logo-image left-image" />
-      </div>
-      <div class="column right-logo-column">
-        <img src="/images/greenbank.png" class="logo-image right-image" />
-      </div>
-    </div>
+    <img src="/images/sadnet_hardhat.png" class="logo-image right-image" />
   </section>
 
   <section class="hero is-info">
     <div class="hero-body">
       <div class="container has-text-centered">
         <h1 class="title" style="font-weight: normal;">
-          You're on <b>Greenbank</b>, <%= full_name %>
+          You're on <b>SADNET</b>, <%= full_name %>
         </h1>
         <h2 class="subtitle">
           Welcome, user
@@ -234,7 +224,7 @@
 
 
         <!-- PASSWORD -->
-        <div class="tile is-child message <%= if pass_good?, do: " is-success", else: "is-danger" %>">
+        <!--<div class="tile is-child message <%= if pass_good?, do: " is-success", else: "is-danger" %>">
           <div class="message-header">
             <span <%=if pass_good?, do: ~s(style="font-style: italic;" ) %>>
               <%= if pass_good?, do: "Password Already Changed" , else: "Change your Password" %>
@@ -304,6 +294,152 @@
                 </p>
                 <% end %>
           </div>
+        </div>-->
+
+
+        <!-- GROUPS -->
+        <div
+          class="tile is-child message <%= if Enum.member?(member_of, ~s(sadmembers)), do: ~s(is-info), else: ~s(is-danger) %>">
+          <div class="message-header">
+            Review your System Groups
+            <span class="icon">
+              <i class="fas fa-users"></i>
+            </span>
+          </div>
+          <div class="message-body">
+            <table class="table is-hoverable is-fullwidth block" style="background-color: inherit;">
+              <thead>
+                <tr>
+                  <td></td>
+                  <td><span style="padding: 0 0.75em;">Group ID</span></td>
+                  <td><span style="padding: 0 0.75em;">Description</span></td>
+                </tr>
+              </thead>
+              <tbody>
+                <%= for group <- (member_of) do %>
+                  <tr>
+                    <td>
+                      <span class="tag is-medium icon" style="background-color: inherit;">
+                        <i class="fas fa-user-friends"></i>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="tag is-medium is-white">
+                        <%= group %>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="tag is-medium group-desc" style="background-color: inherit;">
+                        <%= case group do
+                          "ipausers" -> "Generic group for all users"
+                          "sadmembers" -> "VPN access and personal access to Proxmox"
+                          "sadchads" -> "General-level access to shared VMs on Proxmox"
+                          "sadmins" -> "Core board / administrative access"
+                          _ -> "-"
+                          end %>
+                      </span>
+                    </td>
+                  </tr>
+                  <% end %>
+              </tbody>
+            </table>
+            <div class="block">
+              <%= if not Enum.member?(member_of, "sadmembers" ) do %>
+                <p>
+                  <span class="icon">
+                    <i class="fas fa-warning"></i>
+                  </span>
+                  <strong>
+                    Missing access to <span class="tag is-medium is-danger">sadmembers</span>
+                  </strong>
+                  - You are unable to login to Proxmox.
+                </p>
+                <% end %>
+            </div>
+            <div class="block">
+              <strong>Missing a group/permission?</strong> Contact the board to get access.
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- DOCUMENTATION -->
+        <div class="tile is-child message is-link">
+          <div class="message-header">
+            Read the Freaking Manual
+            <span class="icon">
+              <i class="fas fa-book"></i>
+            </span>
+          </div>
+          <div class="message-body">
+            <div class="block">
+              Before making use of the SADNET system, we request that you read the Rules in the following link.
+            </div>
+            <div class="block">
+              <a href="https://umbcsad.club/?page_id=1623" class="button is-link" target="_blank">
+                <span class="icon"> <i class="fas fa-book-reader"></i> </span>
+                <span>Open Manual in New Tab</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="tile is-vertical is-parent tile-right">
+
+
+        <!-- CONNECTIVITY TEST -->
+        <div id="dns-test-panel" class="tile is-child message is-info">
+          <div class="message-header">
+            Test your Connectivity
+            <span class="icon">
+              <i class="fas fa-network-wired"></i>
+            </span>
+          </div>
+          <div class="message-body">
+            <table class="table is-hoverable is-fullwidth block" style="background-color: inherit;">
+              <tbody>
+                <tr>
+                  <td><abbr title="Try fetching http://10.8.0.1">Baseline IP Test</abbr></td>
+                  <td id="test-ip"><i>Waiting to run...</i></td>
+                </tr>
+                <tr>
+                  <td><abbr title="Try fetching http://10.42.0.1">Yellowcake IP Subnet Test</abbr></td>
+                  <td id="test-ip-yc"><i>Waiting to run...</i></td>
+                </tr>
+                <tr>
+                  <td><abbr title="Try fetching http://10.42.5.1">Bluechip IP Subnet Test</abbr></td>
+                  <td id="test-ip-bc"><i>Waiting to run...</i></td>
+                </tr>
+                <tr>
+                  <td><abbr title="Try fetching http://10.42.6.1 - This is EXPECTED to fail.">Expected No Connectivity Check</abbr></td>
+                  <td id="test-expect-fail"><i>Waiting to run...</i></td>
+                </tr>
+                <tr>
+                  <td><abbr title="Try fetching https://proxmox.umbcsad.club:8006">Internal DNS Test</abbr></td>
+                  <td id="test-dns"><i>Waiting to run...</i></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>Summary</td>
+                  <td id="dns-summ"><i>Waiting to run...</i></td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="block">
+              <button id="dns-startbutton" class="button is-info"
+                style="float:right; margin-left: 1.5rem; margin-bottom: 1rem;" onclick="dnsTestClicked()">
+                <span class="icon">
+                  <i class="fas fa-satellite-dish"></i>
+                </span>
+                <span>Run Connectivity Tests</span></button>
+              These Javascript-based tests will check that you have IP connectivity to all parts of the SADNET IP space,
+              and that your system can resolve internal SADNET DNS names.
+            </div>
+          </div>
         </div>
 
 
@@ -340,153 +476,11 @@
                       <% end %>
             </div>
             <div class="block" style="margin-top: 0.8rem;">
-              If you wish to change either of these, log in to FreeIPA (see above).
+              If you wish to change either of these, log in to the Portal (see below).
             </div>
           </div>
         </div>
 
-
-        <!-- DOCUMENTATION -->
-        <div class="tile is-child message is-link">
-          <div class="message-header">
-            Read the Freaking Manual
-            <span class="icon">
-              <i class="fas fa-book"></i>
-            </span>
-          </div>
-          <div class="message-body">
-            <div class="block">
-              Before making use of the Greenbank system, we request that you read the Rules section in the following
-              link,
-              and at least skim the Etiquette section at the bottom a bit.
-            </div>
-            <div class="block">
-              <a href="https://sad.cs.umbc.edu/greenbank" class="button is-link" target="_blank">
-                <span class="icon"> <i class="fas fa-book-reader"></i> </span>
-                <span>Open Manual in New Tab</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-      <div class="tile is-vertical is-parent tile-right">
-
-
-        <!-- DNS TEST -->
-        <div id="dns-test-panel" class="tile is-child message is-info">
-          <div class="message-header">
-            Test your DNS
-            <span class="icon">
-              <i class="fas fa-network-wired"></i>
-            </span>
-          </div>
-          <div class="message-body">
-            <table class="table is-hoverable is-fullwidth block" style="background-color: inherit;">
-              <tbody>
-                <tr>
-                  <td><abbr title="Try fetching the homepage (sanity check)">Baseline Test</abbr></td>
-                  <td id="dns-base"><i>Waiting to run...</i></td>
-                </tr>
-                <tr>
-                  <td><abbr title="Try fetching http://hello.greenbank.lan">DNS Functionality Test</abbr></td>
-                  <td id="dns-func"><i>Waiting to run...</i></td>
-                </tr>
-                <tr>
-                  <td><abbr title="Try fetching just http://hello (check if greenbank.lan is set as search domain)">
-                      DNS Search Domain Test</abbr></td>
-                  <td id="dns-sear"><i>Waiting to run...</i></td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td>Summary</td>
-                  <td id="dns-summ"><i>Waiting to run...</i></td>
-                </tr>
-              </tfoot>
-            </table>
-            <div class="block">
-              <button id="dns-startbutton" class="button is-info"
-                style="float:right; margin-left: 1.5rem; margin-bottom: 1rem;" onclick="dnsTestClicked()">
-                <span class="icon">
-                  <i class="fas fa-satellite-dish"></i>
-                </span>
-                <span>Run DNS Tests</span></button>
-              DNS, the Domain Name System, is the service which associates text-based names like "google.com" with
-              IP addresses. There is an internal DNS system running within the Greenbank network, hosted on pfSense.
-              However, some VPN configs will not automatically set up the DNS. This Javascript-based test will
-              determine if your machine is connected to the Greenbank DNS. Click the button to begin.
-            </div>
-          </div>
-        </div>
-
-
-        <!-- GROUPS -->
-        <div
-          class="tile is-child message <%= if Enum.member?(member_of, ~s(proxmox_basic)), do: ~s(is-info), else: ~s(is-danger) %>">
-          <div class="message-header">
-            Review your System Groups
-            <span class="icon">
-              <i class="fas fa-users"></i>
-            </span>
-          </div>
-          <div class="message-body">
-            <table class="table is-hoverable is-fullwidth block" style="background-color: inherit;">
-              <thead>
-                <tr>
-                  <td></td>
-                  <td><span style="padding: 0 0.75em;">Group ID</span></td>
-                  <td><span style="padding: 0 0.75em;">Description</span></td>
-                </tr>
-              </thead>
-              <tbody>
-                <%= for group <- (member_of) do %>
-                  <tr>
-                    <td>
-                      <span class="tag is-medium icon" style="background-color: inherit;">
-                        <i class="fas fa-user-friends"></i>
-                      </span>
-                    </td>
-                    <td>
-                      <span class="tag is-medium is-white">
-                        <%= group %>
-                      </span>
-                    </td>
-                    <td>
-                      <span class="tag is-medium group-desc" style="background-color: inherit;">
-                        <%= case group do "pfsense_basic" -> "Login and viewing access to firewall"
-                          "pfsense_vpn" -> "Access to VPN (mandatory)"
-                          "ipausers" -> "Generic group for all users"
-                          "proxmox_basic" -> "Access to Proxmox login and sandbox VM pool"
-                          "proxmox_general" -> "Access to general VM pool"
-                          "proxmox_restricted" -> "Advanced access to club infrastructure VMs"
-                          _ -> "-"
-                          end %>
-                      </span>
-                    </td>
-                  </tr>
-                  <% end %>
-              </tbody>
-            </table>
-            <div class="block">
-              <%= if not Enum.member?(member_of, "proxmox_basic" ) do %>
-                <p>
-                  <span class="icon">
-                    <i class="fas fa-warning"></i>
-                  </span>
-                  <strong>
-                    Missing access to <span class="tag is-medium is-danger">proxmox_basic</span>
-                  </strong>
-                  - You are unable to login to Proxmox.
-                </p>
-                <% end %>
-            </div>
-            <div class="block">
-              <strong>Missing a group/permission?</strong> Contact the board to get access.
-            </div>
-          </div>
-        </div>
 
 
       </div>
@@ -497,46 +491,81 @@
     <h1 class="title" style="margin-bottom: 2.5rem;">Quick Links</h1>
     <div class="tile is-ancestor">
       <div class="tile is-parent">
-        <div class="tile is-child message quicklink">
-          <span class="title is-4">Proxmox</span>
+        <div class="tile is-child message quicklink yellowcake">
+          <span class="title is-4">Yellowcake / Proxmox</span>
           <br>
-          <a href="https://proxmox.greenbank.lan:8006/"> <img src="/images/proxmox.png" /></a>
+          <a href="https://proxmox.umbcsad.club:8006/"> <img src="/images/proxmox.png" /></a>
           <br>
-          Use Proxmox to create and view virtual machines and LXC containers. Everything in the Greenbank system runs as
-          a VM or CT in Proxmox.
+          Use Proxmox to create and view virtual machines and LXC containers.
+          This is probably where you'll spend most of your time.
           <br>
-          <pre>https://proxmox.greenbank.lan:8006/</pre>
-          <pre>https://192.168.1.50:8006/</pre>
+          <a href="https://proxmox.umbcsad.club:8006/">https://proxmox.umbcsad.club:8006/</a>
+          <a href="https://10.42.0.50:8006/">https://10.42.0.50:8006/</a>
         </div>
       </div>
       <div class="tile is-parent">
         <div class="tile is-child message quicklink" href="/">
-          <span class="title is-4">FreeIPA</span>
+          <span class="title is-4">Login Portal</span>
           <br>
-          <a href="https://ipa.greenbank.lan/"> <img src="/images/freeipa.png" /></a>
+          <a href="https://login.umbcsad.club/"> <img src="/images/mokey.png" /></a>
           <br>
-          Use FreeIPA to change your password and manage your account details. Admins, use FreeIPA to add new users,
-          grant
-          certificates, and grant user groups.
+          Use the login portal for SADNET account self-service. Change your password here.
           <br>
-          <pre>https://ipa.greenbank.lan/</pre>
-          <pre>https://192.168.1.107/</pre>
+          <a href="https://login.umbcsad.club/">https://login.umbcsad.club/</a>
         </div>
       </div>
       <div class="tile is-parent">
-        <div class="tile is-child message quicklink" href="/">
-          <span class="title is-4">pfSense</span>
+        <div class="tile is-child message quicklink bluechip">
+          <span class="title is-4">Bluechip / ESXi</span>
           <br>
-          <a href="https://pfsense.greenbank.lan/"> <img src="/images/pfsense.png" /></a>
+          <a href="https://esxi.umbcsad.club/"> <img src="/images/esxi.png" /></a>
           <br>
-          Use pfSense to add and edit network services like DHCP, DNS, and NTP, monitor the network, and manage
-          firewall/NAT rules.
+          This is the hypervisor interface for Bluechip.
+          At this time, board approval is required for access.
           <br>
-          <pre>https://pfsense.greenbank.lan/</pre>
-          <pre>https://192.168.1.1/</pre>
+          <a href="https://esxi.umbcsad.club/">https://esxi.umbcsad.club/</a>
+          <a href="https://10.42.5.50/">https://10.42.5.50/</a>
         </div>
       </div>
     </div>
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child message quicklink yellowcake">
+          <span class="title is-4">OPNsense</span>
+          <br>
+          <a href="https://10.42.0.1/"> <img src="/images/opnsense.png" /></a>
+          <br>
+          OPNsense is the firewall sitting in front of Yellowcake's internal hosts.
+          Go here to add port forwards.
+          OPNsense is also the authoritative nameserver for <i>all internal</i> DNS.
+          <br>
+          <a href="https://10.42.0.1/">https://10.42.0.1/</a>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <div class="tile is-child message quicklink">
+          <span class="title is-4">FreeIPA Administration</span>
+          <br>
+          <a href="https://auth.umbcsad.club/"> <img src="/images/freeipa.png" /></a>
+          <br>
+          This is the FreeIPA interface for admin use. Admins, approve new accounts and reset passwords here.
+          <br>
+          <a href="https://auth.umbcsad.club/">https://auth.umbcsad.club/</a>
+          <a href="https://10.42.0.70/">https://10.42.0.70/</a>
+        </div>
+      </div>
+      <div class="tile is-parent">
+        <div class="tile is-child message quicklink bluechip">
+          <span class="title is-4">pfSense</span>
+          <br>
+          <a href="https://10.42.5.1/"> <img src="/images/pfsense.png" /></a>
+          <br>
+          pfSense is the firewall sitting in front of Bluechip's internal hosts.
+          Add port forwards for Bluechip (10.42.5) hosts here.
+          <br>
+          <a href="https://10.42.5.1/">https://10.42.5.1/</a>
+        </div>
+      </div>
   </section>
 
   <footer class="footer">
@@ -545,7 +574,7 @@
         System Administration and Software Development Club <br>
         1000 Hilltop Circle
         Baltimore, MD 21250</p>
-        <p>Greenbank Virtualized Lab Environment</p>
+        <p>SADNET Virtualized Lab Environment</p>
     </div>
   </footer>
 </body>

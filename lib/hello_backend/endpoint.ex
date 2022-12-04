@@ -40,7 +40,7 @@ defmodule HelloBackend.Endpoint do
       |> Enum.find(fn row -> Enum.at(row, 3) |> IO.inspect == user_ip end)
 
     Logger.info(inspect(row))
-    username = Enum.at(row, 1)
+    username = Enum.at(row, 9)
 
     ### use the Ldap genserver to get LDAP data for that username
 
@@ -90,9 +90,9 @@ defmodule HelloBackend.Endpoint do
       full_name: full_name,
       username: username,
       emails: emails,
-      pass_good?: is_pass_good,
+      pass_good?: true,
       member_of: member_of,
-      vpn_ip: Enum.at(row, 0),
+      vpn_ip: Enum.at(row, 3),
       remote_ip: Enum.at(row, 2)
     )
   end

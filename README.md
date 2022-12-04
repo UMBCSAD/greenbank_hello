@@ -32,6 +32,8 @@ Now do `mix deps.get` to install dependencies. Run the server with `mix run --no
 
 ### systemd service
 
+Build a release with `MIX_ENV=prod mix release`. Then make the systemd service...
+
 **Example setup**. In `/etc/systemd/system/hello.service`:
 
 ```ini
